@@ -1,5 +1,7 @@
 const recipeService = require('../services/recipe.service');
 
+const isValidId = (id) => id.match(/^[0-9a-fA-F]{24}$/);
+
 const getAllRecipes = async (req, res, next) => {
   try {
     const recipes = await recipeService.getAllRecipes(req.query);
@@ -15,6 +17,12 @@ const getAllRecipes = async (req, res, next) => {
 
 const getRecipeById = async (req, res, next) => {
   try {
+    if (!isValidId(req.params.id)) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Invalid recipe ID format',
+      });
+    }
     const recipe = await recipeService.getRecipeById(req.params.id);
     if (!recipe) {
       return res.status(404).json({
@@ -45,6 +53,12 @@ const createRecipe = async (req, res, next) => {
 
 const updateRecipe = async (req, res, next) => {
   try {
+    if (!isValidId(req.params.id)) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Invalid recipe ID format',
+      });
+    }
     const updatedRecipe = await recipeService.updateRecipe(
       req.params.id,
       req.body
@@ -66,6 +80,12 @@ const updateRecipe = async (req, res, next) => {
 
 const deleteRecipe = async (req, res, next) => {
   try {
+    if (!isValidId(req.params.id)) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Invalid recipe ID format',
+      });
+    }
     const deleted = await recipeService.deleteRecipe(req.params.id);
     if (!deleted) {
       return res.status(404).json({
