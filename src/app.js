@@ -14,4 +14,14 @@ app.use((req, res) => {
   });
 });
 
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const status = err.status || 'error';
+
+  res.status(statusCode).json({
+    status: status,
+    message: err.message || 'Something went wrong on the server',
+  });
+});
+
 module.exports = app;
